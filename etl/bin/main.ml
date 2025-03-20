@@ -1,5 +1,10 @@
+(* bin/main.ml *)
+open Etl.Etl_extract
+
 let () =
   print_endline "Starting ETL pipeline...";
-  let url = "https://raw.githubusercontent.com/PedroPertusi/etl-ocaml/main/etl/data/order.csv" in
-  let csv_data = Lwt_main.run (Etl.Etl_extract.fetch_csv url) in
-  print_endline csv_data
+  let order_data : string = fetch_csv_sync "https://raw.githubusercontent.com/JoaoLucasMBC/etl-ocaml/refs/heads/main/etl/data/order.csv" in
+  let item_data : string = fetch_csv_sync "https://raw.githubusercontent.com/JoaoLucasMBC/etl-ocaml/refs/heads/main/etl/data/order_item.csv" in
+
+  print_endline order_data;
+  print_endline item_data

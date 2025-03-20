@@ -11,3 +11,7 @@ let fetch_csv (url : string) : string Lwt.t =
     Cohttp_lwt.Body.to_string body
   else
     Lwt.fail_with (Printf.sprintf "HTTP request failed with code: %d" status)
+
+(* Synchronous wrapper: *)
+let fetch_csv_sync (url : string) : string =
+  Lwt_main.run (fetch_csv url)
