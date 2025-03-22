@@ -1,18 +1,31 @@
-(* bin/main.ml *)
-open Etl.Etl_extract
-open Etl.Csv_parser_order
+open Etl.Reader
+open Etl.Helper
+open Etl.Records
 
 let () =
   print_endline "Starting ETL pipeline...";
-  let order_data : string = fetch_csv_sync "https://raw.githubusercontent.com/PedroPertusi/etl-ocaml/main/etl/data/order.csv" in
-  (* let item_data : string = fetch_csv_sync "https://raw.githubusercontent.com/PedroPertusi/etl-ocaml/main/etl/data/order_items.csv" in *)
+  let order_data = read_csv_url "https://raw.githubusercontent.com/PedroPertusi/etl-ocaml/main/etl/data/order.csv" in
+  let item_data = read_csv_url "https://raw.githubusercontent.com/PedroPertusi/etl-ocaml/main/etl/data/order_item.csv" in
 
-  (* Convert the CSV string into a list of order records *)
-  let orders = parse_orders order_data in
-  
-  (* Print summary and details of parsed orders *)
-  print_endline ("Parsed " ^ string_of_int (List.length orders) ^ " orders");
+  let orders = orders_of_csv order_data in
+  let order_items = order_items_of_csv item_data in
+
   List.iter (fun order ->
-    Printf.printf "Order: id=%d, client_id=%d, order_date=%s, status=%s, origin=%s\n"
-      order.id order.client_id order.order_date order.status order.origin
-  ) orders
+    Printf.printf "%d, %d, %s, %s, %s\n"
+      order.id
+      order.client_id
+      order.order_date
+      order.status
+      order.origin
+  ) orders;
+
+  print_endline "------";
+
+  List.iter (fun item ->
+    Printf.printf "%d, %d, %d, %f, %f\n"
+      item.order_id
+      item.product_id
+      item.quantity
+      item.price
+      item.tax
+  ) order_items;
