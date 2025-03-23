@@ -16,14 +16,14 @@ type order_item = {
   tax : float;
 }
 
-(* type order_join_order_item = {
+type order_join_items = {
+  (* order *)
+  order_date : string;
+  status : string;
+  origin : string;
+  (* order_item *)
   order_id : int;
-  (* product_id : int; *)
   quantity : int;
   price : float;
   tax : float;
-  (* client_id : int; *)
-  order_date : Ptime.t;
-  status : string;
-  origin : string;
-} *)
+}
