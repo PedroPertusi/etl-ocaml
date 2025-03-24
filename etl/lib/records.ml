@@ -27,3 +27,9 @@ type order_join_items = {
   price : float;
   tax : float;
 }
+
+type order_summary = {
+  order_id : int;
+  total_amount : float;
+  total_taxes : float;
+}
