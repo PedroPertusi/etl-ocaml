@@ -1,4 +1,4 @@
-(* Define the order_item type *)
+(* records.ml *)
 
 type order = {
   id : int;
@@ -32,4 +32,11 @@ type order_summary = {
   order_id : int;
   total_amount : float;
   total_taxes : float;
+}
+
+type order_mean_summary = {
+  mean_amount : float;
+  mean_taxes : float;
+  month : string;
+  year : string;
 }

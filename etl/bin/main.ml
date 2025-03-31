@@ -2,8 +2,9 @@ open Etl.Filter
 open Etl.Helper
 open Etl.Parser
 open Etl.Reader
-open Etl.Records
+(* open Etl.Records *)
 open Etl.Transformer
+open Etl.Writer
 
 let () =
   print_endline "Starting ETL pipeline...";
@@ -23,7 +24,13 @@ let () =
 
   let aggregated = aggregate_order_items filtered in
 
-  List.iter (fun summary ->
-    Printf.printf "Order id: %d, Total Amount: %.2f, Total Taxes: %.2f\n"
-      summary.order_id summary.total_amount summary.total_taxes
-  ) aggregated
+  let mean_summary = mean_order_items filtered in
+
+  save_order_summaries_csv aggregated "data/orders_summary.csv";
+  
+  save_monthly_summaries_csv mean_summary "data/monthly_summary.csv";
+
+  save_order_summaries aggregated;
+
+  save_monthly_summaries mean_summary;
+
