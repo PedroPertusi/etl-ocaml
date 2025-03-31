@@ -2,6 +2,13 @@
 open Records
 open Helper
 
+(** [inner_join_orders orders order_items] performs an inner join between two lists:
+    the [orders] and their associated [order_items].
+
+    @param orders A list of order records.
+    @param order_items A list of order item records.
+    @return A list of combined [order_join_items] where each item is linked to its parent order.
+    Orders without matching items are ignored. *)
 let rec inner_join_orders (orders : order list) (order_items : order_item list) : order_join_items list =
   match order_items with
   | [] -> []
@@ -20,7 +27,11 @@ let rec inner_join_orders (orders : order list) (order_items : order_item list) 
           :: inner_join_orders orders t
       | None -> inner_join_orders orders t
 
+(** [aggregate_order_items items] aggregates a list of joined order-item records
+    to compute the total amount and total taxes per order.
 
+    @param items A list of [order_join_items] to aggregate.
+    @return A list of [order_summary] records, each containing the total amount and taxes for one order. *)
 let aggregate_order_items (items : order_join_items list) : order_summary list =
   let grouped =
     List.fold_left (fun acc item ->
@@ -39,7 +50,11 @@ let aggregate_order_items (items : order_join_items list) : order_summary list =
     { order_id; total_amount; total_taxes }
   ) grouped
 
+(** [mean_order_items items] calculates the mean amount and mean taxes
+    for orders grouped by year and month.
 
+    @param items A list of [order_join_items].
+    @return A list of [order_mean_summary], each containing average values for a month/year group. *)
 let mean_order_items (items : order_join_items list) : order_mean_summary list =
   let group_orders_by_month_year orders = 
     list_group_by (fun order -> extract_month_year order.order_date) orders
